@@ -1,3 +1,5 @@
+import 'package:bexchange/views/interstitial_ad_screen.dart';
+
 import '../views/home/dashboard.dart';
 import '../views/home/market.dart';
 import '../views/home/portfolio.dart';
@@ -33,8 +35,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
   final List<Widget> _screensList = [
       const DashboardScreen(),
-      const PortfolioScreen(),
-      const MarketScreen(),
+      // const PortfolioScreen(),
+      // const MarketScreen(),
+      const InterstitialAdScreen(),
+      const DashboardScreen(),
     ];
 
   final List<IconData> _bottomIcons = [
@@ -152,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: Stack(
         children: [         
             // The main Screen is HERE
-          _screensList[0],
+          _screensList[_selectedBottomIndex],
           // Displaying the Banner Ad with AdWidget
           if (_bannerAd != null)
             Align(
