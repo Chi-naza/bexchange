@@ -5,6 +5,8 @@ import '../views/home/portfolio.dart';
 import '../core/res/color.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io' show Platform;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,24 +19,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  @override
-  void initState() {
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-      value: 0,
-      lowerBound: 0,
-      upperBound: 1,
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
-    _controller.forward();
-    _bellController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-    _runAnimation();
-    super.initState();
-  }
 
   late AnimationController _bellController;
   // late List<Widget> _screensList;
@@ -59,10 +43,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Icons.maps_home_work_outlined,
     ];
 
+
+
+  ////////////////  GOOGLE ADS HERE   ////////////////////////////
+  BannerAd? _bannerAd;
+  final AdSize myAdSize = const AdSize(height: 90, width: 728);
+  final String _adUnitId = Platform.isAndroid? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-3940256099942544/2934735716';
+
+
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+      value: 0,
+      lowerBound: 0,
+      upperBound: 1,
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+    _bellController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _runAnimation();
+
+    // loading the ads
+    _loadAd();
+    
+    super.initState();
+  }
+
+  
   @override
   void dispose() {
     _controller.dispose();
     _bellController.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -131,7 +149,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ],
             ),
       // body: _screensList[_selectedBottomIndex],
-      body: _screensList[0],
+      body: Stack(
+        children: [         
+            // The main Screen is HERE
+          _screensList[0],
+          // Displaying the Banner Ad with AdWidget
+          if (_bannerAd != null)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SafeArea(
+                child: SizedBox(
+                  width: _bannerAd!.size.width.toDouble(),
+                  height: _bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: _bannerAd!),
+                ),
+              ),
+            )
+        ],
+      ),
       bottomNavigationBar: Container(
         height: kBottomNavigationBarHeight + 20,
         width: 100.w,
@@ -175,6 +210,38 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
+
+
+  // Function to load the Ad
+  // Dimensions of the ad are determined by the AdSize class.
+  void _loadAd() async {
+    BannerAd(
+      adUnitId: _adUnitId,
+      request: const AdRequest(),
+      size: myAdSize,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+        },
+        // Called when an ad opens an overlay that covers the screen.
+        onAdOpened: (Ad ad) {},
+        // Called when an ad removes an overlay that covers the screen.
+        onAdClosed: (Ad ad) {
+          print('BANNER :::: Add Has Closed Now');
+        },
+        // Called when an impression occurs on the ad.
+        onAdImpression: (Ad ad) {},
+      ),
+    ).load();
+  }
+
 }
 
 class PositionedCircle extends StatelessWidget {
