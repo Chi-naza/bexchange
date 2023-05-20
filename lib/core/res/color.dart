@@ -84,9 +84,9 @@ class AppColors {
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
       colors: [
-        color[600]!.withOpacity(0.7),
-        color[500]!.withOpacity(0.7),
-        color[400]!.withOpacity(0.7),
+        color[900]!.withOpacity(0.7), // 600
+        color[700]!.withOpacity(0.7), // 500
+        color[500]!.withOpacity(0.7), // 400
       ],
       stops: const [
         0.2,

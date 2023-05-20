@@ -50,11 +50,11 @@ class CryptoCard extends StatelessWidget {
                   const SizedBox(
                     width: 20,
                   ),
-                  const Text(
-                    "Earn Ethereum",
+                  Text(
+                    "Earn With BeXchange",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                      fontSize: 18.sp,
                       color: Colors.white,
                     ),
                   )

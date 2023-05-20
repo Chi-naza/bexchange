@@ -130,7 +130,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ],
             ),
-      body: _screensList[_selectedBottomIndex],
+      // body: _screensList[_selectedBottomIndex],
+      body: _screensList[0],
       bottomNavigationBar: Container(
         height: kBottomNavigationBarHeight + 20,
         width: 100.w,

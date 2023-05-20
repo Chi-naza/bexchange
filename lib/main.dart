@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         title: 'Task Management',
         debugShowCheckedModeBanner: false,
         theme: AppColors.getTheme,
-        initialRoute: Routes.home,
+        initialRoute: Routes.splashScreen,
         onGenerateRoute: RouterGenerator.generateRoutes,
       );
     });
